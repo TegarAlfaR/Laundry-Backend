@@ -2,7 +2,10 @@ const express = require("express");
 const dotenv = require("dotenv");
 
 const app = express();
+const cors = require("cors");
 dotenv.config();
+
+app.use(cors());
 
 const router = require("./routers");
 const notFound = require("./middlewares/notFound");
