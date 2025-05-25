@@ -13,7 +13,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Order.init(
     {
-      user_id: DataTypes.INTEGER,
+      order_id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
       user_name: DataTypes.STRING,
       address: DataTypes.STRING,
       pickup_time: DataTypes.DATE,

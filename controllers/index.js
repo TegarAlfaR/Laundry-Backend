@@ -1,3 +1,4 @@
-const healCheckController = require("./healtCheckController");
+const healthCheckController = require("./healtCheckController");
+const orderController = require("./orderController");
 
-module.exports = { healCheckController };
+module.exports = { healthCheckController, orderController };
