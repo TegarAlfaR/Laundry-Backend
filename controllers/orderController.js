@@ -4,20 +4,20 @@ const getOrders = async (req, res) => {
   try {
     const orderData = await Order.findAll();
     if (!orderData || orderData.length === 0) {
-      res.status(404).json({
+      returnres.status(404).json({
         status: "failed",
         message: "Orders data is not found",
         data: null,
       });
     }
 
-    res.status(200).json({
+    returnres.status(200).json({
       status: "success",
       message: "success get all orders",
       data: orderData,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "failed",
       message: error.message,
       data: null,
@@ -32,7 +32,7 @@ const getOrderById = async (req, res) => {
     const orderData = await Order.findByPk(id);
 
     if (!orderData) {
-      res.status(404).json({
+      return res.status(404).json({
         status: "failed",
         message: `data order by id ${id} is not found`,
         data: null,
@@ -45,7 +45,7 @@ const getOrderById = async (req, res) => {
       data: orderData,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "failed",
       message: error.message,
       data: null,
@@ -65,7 +65,7 @@ const createOrder = async (req, res) => {
       !laundry_category ||
       !quantity
     ) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "failed",
         message: "all fields are required",
         data: null,
@@ -84,7 +84,7 @@ const createOrder = async (req, res) => {
         status: "pending",
       });
 
-      res.status(201).json({
+      returnres.status(201).json({
         status: "success",
         message: "success create order",
         data: newOrder,
@@ -101,7 +101,7 @@ const createOrder = async (req, res) => {
         status: "pending",
       });
 
-      res.status(201).json({
+      return res.status(201).json({
         status: "success",
         message: "success create order",
         data: newOrder,
@@ -118,14 +118,14 @@ const createOrder = async (req, res) => {
         status: "pending",
       });
 
-      res.status(201).json({
+      return res.status(201).json({
         status: "success",
         message: "success create order",
         data: newOrder,
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "failed",
       message: error.message,
       data: null,
@@ -144,20 +144,20 @@ const hardDeleteOrder = async (req, res) => {
     });
 
     if (!deletedOrder) {
-      res.status(404).json({
+      return res.status(404).json({
         status: "failed",
         message: `data order by id ${id} is not found`,
         data: null,
       });
     } else {
-      res.status(200).json({
+      return res.status(200).json({
         status: "success",
         message: `success delete order in id ${id}`,
         data: null,
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "failed",
       message: error.message,
       data: null,
