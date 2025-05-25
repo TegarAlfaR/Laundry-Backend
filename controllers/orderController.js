@@ -11,7 +11,7 @@ const getOrders = async (req, res) => {
       });
     }
 
-    returnres.status(200).json({
+    return res.status(200).json({
       status: "success",
       message: "success get all orders",
       data: orderData,
@@ -84,7 +84,7 @@ const createOrder = async (req, res) => {
         status: "pending",
       });
 
-      returnres.status(201).json({
+      return res.status(201).json({
         status: "success",
         message: "success create order",
         data: newOrder,
