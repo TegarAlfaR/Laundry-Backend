@@ -151,9 +151,7 @@ const softDeleteService = async (req, res) => {
       });
     }
 
-    await service.update({
-      deletedAt: new Date(),
-    });
+    await service.destroy(serviceId);
 
     return res.status(200).json({
       status: "Success",
