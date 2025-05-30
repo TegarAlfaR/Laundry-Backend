@@ -33,10 +33,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
+      deletedAt: {
+        type: DataTypes.DATE,
+        defaultValue: null,
+      },
     },
     {
       sequelize,
       modelName: "Service",
+      paranoid: true,
+      timestamps: true,
     }
   );
   return Service;
