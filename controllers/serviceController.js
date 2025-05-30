@@ -58,18 +58,10 @@ const createServices = async (req, res) => {
   const { laundryCategory, price } = req.body;
 
   try {
-    if (!laundryCategory) {
+    if (!laundryCategory && !price) {
       return res.status(400).json({
         status: "Failed",
-        message: "Failed, laundryCategory is required",
-        data: null,
-      });
-    }
-
-    if (!price) {
-      return res.status(400).json({
-        status: "Failed",
-        message: "Failed, price is required",
+        message: "Failed, laundryCategory and price are required",
         data: null,
       });
     }
@@ -100,6 +92,14 @@ const updateServices = async (req, res) => {
   const { laundryCategory, price } = req.body;
 
   try {
+    if (!laundryCategory && !price) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Failed, laundryCategory or price are required",
+        data: null,
+      });
+    }
+
     const service = await Service.findByPk(serviceId);
 
     if (!service) {
@@ -111,7 +111,7 @@ const updateServices = async (req, res) => {
     }
 
     const updatedService = await service.update({
-      laundryCategory: laundryCategory,
+      laundryCategory: laundryCategory.toLowerCase(),
       price: price,
       updatedAt: new Date(),
     });
@@ -134,6 +134,14 @@ const softDeleteService = async (req, res) => {
   const serviceId = req.params.id;
   try {
     const service = await Service.findByPk(serviceId);
+
+    if (!serviceId) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Failed, serviceId is required",
+        data: null,
+      });
+    }
 
     if (!service) {
       return res.status(404).json({
