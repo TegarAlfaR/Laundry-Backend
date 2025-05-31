@@ -41,10 +41,16 @@ module.exports = (sequelize, DataTypes) => {
       telephone: DataTypes.STRING,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
+      deletedAt: {
+        type: DataTypes.DATE,
+        defaultValue: null,
+      },
     },
     {
       sequelize,
       modelName: "User",
+      paranoid: true,
+      timestamps: true,
     }
   );
   return User;
