@@ -75,6 +75,7 @@ const login = async (req, res) => {
       id: user.userId,
       username: user.name,
       email: user.email,
+      role: user.role,
     };
 
     const option = { httpOnly: true };
