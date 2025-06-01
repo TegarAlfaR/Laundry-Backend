@@ -18,17 +18,21 @@ module.exports = (sequelize, DataTypes) => {
   }
   Transaction.init(
     {
-      userId: {
+      transactionId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       address: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      pickup_time: {
+      pickupTime: {
         type: DataTypes.DATE,
         allowNull: false,
       },
@@ -37,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "pending",
         allowNull: false,
       },
-      total_price: DataTypes.INTEGER,
+      totalPrice: DataTypes.INTEGER,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
     },
