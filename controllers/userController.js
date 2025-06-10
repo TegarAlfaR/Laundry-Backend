@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { User } = require("../db/models");
+const imagekit = require("../lib/imagekit");
+const { DATE } = require("sequelize");
 
 const getUsers = async (req, res) => {
   try {
@@ -68,6 +70,7 @@ const updateUser = async (req, res) => {
   try {
     const userId = req.params.id;
     const { name, password, telephone } = req.body;
+    const file = req.file;
 
     if (!userId) {
       return res.status(400).json({
@@ -87,11 +90,30 @@ const updateUser = async (req, res) => {
       });
     }
 
+    let updatedPassword = user.password;
+    let updatedImageUrl = user.profileImage;
+
+    if (file) {
+      const split = file.originalname.split(".");
+      const ext = split[split.length - 1];
+
+      const updatedImage = await imagekit.upload({
+        file: req.file.buffer,
+        fileName: `Profile-${Date.now()}.${ext}`,
+      });
+      updatedImageUrl = updatedImage.url;
+    }
+
+    if (password) {
+      updatedPassword = await bcrypt.hash(password, 10);
+    }
+
     const updatedUser = await user.update({
       name,
-      password,
+      password: updatedPassword,
       telephone,
       updatedAt: new Date(),
+      profileImage: updatedImageUrl,
     });
 
     return res.status(200).json({
