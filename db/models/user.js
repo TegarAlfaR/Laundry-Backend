@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: DataTypes.STRING,
       telephone: DataTypes.STRING,
+      profileImage: DataTypes.TEXT,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
       deletedAt: {

@@ -29,6 +29,9 @@ module.exports = {
       telephone: {
         type: Sequelize.STRING,
       },
+      profileImage: {
+        type: Sequelize.TEXT,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -40,7 +43,7 @@ module.exports = {
       deletedAt: {
         type: Sequelize.DATE,
         defaultValue: null,
-      }
+      },
     });
   },
   async down(queryInterface, Sequelize) {
