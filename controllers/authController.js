@@ -5,6 +5,8 @@ const { User } = require("../db/models");
 const register = async (req, res) => {
   const { email, telephone, password, name } = req.body;
 
+  const defaultProfileImage = process.env.DEFAULT_PROFILE_IMAGE;
+
   try {
     if (!email || !telephone || !password || !name) {
       return res.status(400).json({
@@ -33,6 +35,7 @@ const register = async (req, res) => {
       email,
       telephone,
       password: hashPassword,
+      profileImage: defaultProfileImage,
     });
 
     return res.status(201).json({
