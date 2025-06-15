@@ -1,0 +1,56 @@
+services:
+  - type: web
+    name: laundry-backend
+    env: node
+    plan: free
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+
+    envVars:
+      # App Config
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+
+      # DB Credentials
+      - key: DB_USERNAME
+        fromEnvVar: DB_USERNAME
+      - key: DB_PASSWORD
+        fromEnvVar: DB_PASSWORD
+      - key: DB_NAME
+        fromEnvVar: DB_NAME
+      - key: DB_HOST
+        fromEnvVar: DB_HOST
+      - key: DB_DIALECT
+        fromEnvVar: DB_DIALECT
+      - key: DB_PORT
+        fromEnvVar: DB_PORT
+
+      # JWT Auth
+      - key: JWT_SECRET_KEY
+        fromEnvVar: JWT_SECRET_KEY
+      - key: JWT_EXPIRED_IN
+        fromEnvVar: JWT_EXPIRED_IN
+
+      # Admin Credentials
+      - key: ADMIN_EMAIL
+        fromEnvVar: ADMIN_EMAIL
+      - key: ADMIN_NAME
+        fromEnvVar: ADMIN_NAME
+      - key: ADMIN_PASSWORD
+        fromEnvVar: ADMIN_PASSWORD
+
+      # ImageKit
+      - key: IMAGEKIT_PUBLIC_KEY
+        fromEnvVar: IMAGEKIT_PUBLIC_KEY
+      - key: IMAGEKIT_PRIVATE_KEY
+        fromEnvVar: IMAGEKIT_PRIVATE_KEY
+      - key: IMAGEKIT_URL
+        fromEnvVar: IMAGEKIT_URL
+
+      # Default Profile
+      - key: DEFAULT_PROFILE_IMAGE
+        fromEnvVar: DEFAULT_PROFILE_IMAGE
