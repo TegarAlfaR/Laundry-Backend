@@ -1,4 +1,4 @@
-const healthCheckController = require("./healtCheckController");
+const healthCheckController = require("./healthCheckController");
 const serviceController = require("./serviceController");
 const authController = require("./authController");
 const userController = require("./userController");
