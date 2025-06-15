@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const healthCheckRouter = require("./healthCheck");
+// const healthCheckRouter = require("./healthCheck");
 const servicesRouter = require("./serviceRouter");
 const authRouter = require("./authRouter");
 const userRouter = require("./userRouter");
