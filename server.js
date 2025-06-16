@@ -11,7 +11,7 @@ const notFound = require("./middlewares/notFound");
 
 app.use(express.json());
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({
     status: "Success",
     message: "Welcome to Laundry API",
