@@ -4,7 +4,24 @@ const dotenv = require("dotenv");
 dotenv.config();
 const app = express();
 const cors = require("cors");
-app.use(cors());
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://antar-jemput-laundry.vercel.app/",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 const router = require("./routers");
 const notFound = require("./middlewares/notFound");
