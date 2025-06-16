@@ -1,5 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
+const fs = require("fs");
+const path = require("path");
 
 module.exports = {
   development: {
@@ -12,6 +14,9 @@ module.exports = {
       ssl: {
         require: true,
         rejectUnauthorized: false,
+        ca: fs
+          .readFileSync(path.join(__dirname, "..", "certs", "supabase-ca.crt"))
+          .toString(),
       },
     },
   },
@@ -31,7 +36,10 @@ module.exports = {
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: true,
+        rejectUnauthorized: false,
+        ca: fs
+          .readFileSync(path.join(__dirname, "..", "certs", "supabase-ca.crt"))
+          .toString(),
       },
     },
   },
