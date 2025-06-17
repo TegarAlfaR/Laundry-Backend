@@ -122,4 +122,22 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout };
+const getMe = async (req, res) => {
+  try {
+    const user = req.user;
+
+    return res.status(200).json({
+      status: "Success",
+      message: "User data retrieved successfully",
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: error.message,
+      data: null,
+    });
+  }
+};
+
+module.exports = { register, login, logout, getMe };

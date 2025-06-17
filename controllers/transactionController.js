@@ -2,22 +2,39 @@ const { Transaction, Order_item, Service } = require("../db/models");
 
 const getTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.findAll({
-      include: [{ model: Order_item, as: "order_item" }],
-    });
+    const { userId, role } = req.user;
+    let transactions;
 
-    if (!transaction || transaction.length === 0) {
-      return res.status(404).json({
-        status: "Failed",
-        message: "Failed, transaction data not found",
-        data: null,
+    const includeOptions = [
+      {
+        model: Order_item,
+        as: "order_item",
+        include: {
+          model: Service,
+          as: "service",
+        },
+      },
+    ];
+
+    const orderOptions = [["createdAt", "DESC"]];
+
+    if (role === "admin") {
+      transactions = await Transaction.findAll({
+        include: includeOptions,
+        order: orderOptions,
+      });
+    } else {
+      transactions = await Transaction.findAll({
+        where: { userId: userId },
+        include: includeOptions,
+        order: orderOptions,
       });
     }
 
     return res.status(200).json({
       status: "Success",
       message: "Success get transaction data",
-      data: transaction,
+      data: transactions,
     });
   } catch (error) {
     return res.status(500).json({
@@ -130,21 +147,29 @@ const updateTransaction = async (req, res) => {
   const { items, status } = req.body;
 
   try {
-    const validStatuses = ["pending", "on-progress", "done", "failed"];
+    const validStatuses = ["pending", "on-progress", "success", "failed"];
     if (status && !validStatuses.includes(status)) {
       return res.status(400).json({
         status: "Error",
         message: "Invalid status value",
       });
     }
-    let total_price = 0;
 
+    const dataToUpdate = {};
+
+    if (status) {
+      dataToUpdate.status = status;
+    }
     if (items && Array.isArray(items)) {
+      let totalPrice = 0;
+
       for (const item of items) {
         const orderItem = await Order_item.findByPk(item.orderItemId);
         if (!orderItem) continue;
 
         const service = await Service.findByPk(orderItem.serviceId);
+        if (!service) continue;
+
         const subtotal = item.quantity * service.price;
 
         await orderItem.update({
@@ -152,23 +177,19 @@ const updateTransaction = async (req, res) => {
           subtotal,
         });
 
-        total_price += subtotal;
+        totalPrice += subtotal;
       }
-      await Transaction.update({ total_price }, { where: { transactionId } });
+      dataToUpdate.totalPrice = totalPrice;
     }
 
-    if (status) {
-      await Transaction.update({ status }, { where: { transactionId } });
-    }
+    await Transaction.update(dataToUpdate, { where: { transactionId } });
+
+    const updatedTransaction = await Transaction.findByPk(transactionId);
 
     return res.status(200).json({
       status: "Success",
-      message: "Transaction updated",
-      data: {
-        transactionId,
-        ...(items && { total_price }),
-        ...(status && { status }),
-      },
+      message: "Transaction updated successfully",
+      data: updatedTransaction,
     });
   } catch (error) {
     return res.status(500).json({
