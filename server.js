@@ -7,7 +7,7 @@ const cors = require("cors");
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://antar-jemput-laundry.vercel.app/",
+  "https://antar-jemput-laundry.vercel.app",
 ];
 
 app.use(
