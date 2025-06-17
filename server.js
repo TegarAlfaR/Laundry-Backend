@@ -1,9 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
+
 const app = express();
 const cors = require("cors");
+app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",
