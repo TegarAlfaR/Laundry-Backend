@@ -81,7 +81,7 @@ const login = async (req, res) => {
       role: user.role,
     };
 
-    const option = { httpOnly: true };
+    const option = { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
       expiresIn: process.env.JWT_EXPIRED_IN,
