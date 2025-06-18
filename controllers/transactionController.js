@@ -33,7 +33,7 @@ const getTransaction = async (req, res) => {
 
     return res.status(200).json({
       status: "Success",
-      message: "Success get transaction data",
+      message: "Success get transaction data adadas",
       data: transactions,
     });
   } catch (error) {
@@ -124,7 +124,16 @@ const createTransaction = async (req, res) => {
     const transactionWithItems = await Transaction.findByPk(
       newTransaction.transactionId,
       {
-        include: [{ model: Order_item, as: "order_item" }],
+        include: [
+          {
+            model: Order_item,
+            as: "order_item",
+            include: {
+              model: Service,
+              as: "service",
+            },
+          },
+        ],
       }
     );
 
