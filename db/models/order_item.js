@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "transactionId",
         as: "transaction",
       });
-      Order_item.hasOne(models.Service, {
+      Order_item.belongsTo(models.Service, {
         foreignKey: "serviceId",
         as: "service",
       });
