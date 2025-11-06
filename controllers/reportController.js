@@ -7,24 +7,30 @@ const {
 } = require("../db/models");
 const { Op } = require("sequelize");
 
-// Controller untuk laporan transaksi
 exports.getTransactionReport = async (req, res) => {
   try {
     const { startDate, endDate, status } = req.query;
 
-    // Filter dinamis
     const where = {};
-    if (status) where.status = status;
+    const paymentWhere = {};
+
+    // 🔹 Filter tanggal berdasarkan createdAt
+    // 🔹 Filter tanggal berdasarkan createdAt
     if (startDate && endDate) {
-      const start = new Date(`${startDate}T00:00:00.000Z`);
-      const end = new Date(`${endDate}T23:59:59.999Z`);
+      const start = new Date(startDate);
+      const end = new Date(endDate);
       where.createdAt = { [Op.between]: [start, end] };
     } else if (startDate) {
-      const start = new Date(`${startDate}T00:00:00.000Z`);
+      const start = new Date(startDate);
       where.createdAt = { [Op.gte]: start };
     } else if (endDate) {
-      const end = new Date(`${endDate}T23:59:59.999Z`);
+      const end = new Date(endDate);
       where.createdAt = { [Op.lte]: end };
+    }
+
+    // 🔹 Filter status pembayaran
+    if (status && status !== "all" && status !== "") {
+      paymentWhere.paymentStatus = status;
     }
 
     const transactions = await Transaction.findAll({
@@ -39,7 +45,11 @@ exports.getTransactionReport = async (req, res) => {
           model: Payment,
           as: "payment",
           attributes: ["paymentStatus", "paymentType", "grossAmount"],
+          // kalau user filter status pembayaran → required: true (harus punya payment)
+          where: Object.keys(paymentWhere).length ? paymentWhere : undefined,
+          required: Object.keys(paymentWhere).length > 0,
         },
+
         {
           model: Order_item,
           as: "order_item",
@@ -55,7 +65,7 @@ exports.getTransactionReport = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    // Opsional: hitung total revenue & total transaksi
+    // Hitung total pendapatan
     const totalRevenue = transactions.reduce(
       (sum, trx) => sum + (trx.payment?.grossAmount || 0),
       0
@@ -63,14 +73,17 @@ exports.getTransactionReport = async (req, res) => {
 
     res.status(200).json({
       message: "Transaction report fetched successfully",
-      totalTransactions: transactions.length,
-      totalRevenue,
       data: transactions,
+      summary: {
+        totalTransactions: transactions.length,
+        totalRevenue,
+      },
     });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "Error fetching report", error: error.message });
+    console.error("Error fetching report:", error);
+    res.status(500).json({
+      message: "Error fetching report",
+      error: error.message,
+    });
   }
 };
